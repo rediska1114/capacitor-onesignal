@@ -132,7 +132,7 @@ public class CapacitorOnesignal: CAPPlugin {
     }
 
     @objc func setLaunchURLsInApp(_ call: CAPPluginCall) {
-        guard let enabled = call.getString("enabled") else {
+        guard let enabled = call.getBool("enabled") else {
             return call.reject("Missing enabled argument")
         }
         OneSignal.setLaunchURLsInApp(enabled)
