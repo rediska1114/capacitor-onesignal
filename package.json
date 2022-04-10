@@ -27,10 +27,10 @@
     "prettier-plugin-java": "^0.8.0",
     "rimraf": "^3.0.0",
     "rollup": "^2.21.0",
-    "swiftlint": "^1.0.1",
-    "typescript": "~4.1.2",
     "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-generate-package-json": "^3.2.0"
+    "rollup-plugin-generate-package-json": "^3.2.0",
+    "swiftlint": "^1.0.1",
+    "typescript": "~4.1.2"
   },
   "peerDependencies": {
     "@capacitor/core": ">=2.4.0",
@@ -62,5 +62,8 @@
   },
   "bugs": {
     "url": "https://github.com/rediska1114/capacitor-onesignal/issues"
+  },
+  "dependencies": {
+    "capacitor-onesignal": "^0.1.2"
   }
 }
