@@ -23,6 +23,7 @@ export interface CapacitorOnesignalPlugin {
   disablePush(options: { disabled: boolean }): Promise<void>;
   setExternalUserId(options: { externalUserId: string }): Promise<void>;
   removeExternalUserId(): Promise<void>;
+  setLaunchURLsInApp(options: { enabled: boolean }): Promise<void>;
 }
 
 export enum LogLevel {
@@ -35,5 +36,27 @@ export enum LogLevel {
   NONE = 'NONE',
 }
 
-export type DeviceState = object; // TODO typing
-export type LaunchOptions = object // TODO typing
+export enum PermissionStatus {
+  NotDetermined = 0,
+  Denied = 1,
+  Authorized = 2,
+  Provisional = 3,
+  Ephemeral = 4,
+}
+
+export type DeviceState = {
+  userId: string;
+  emailUserId: string;
+  smsUserId: string;
+  emailAddress: string;
+  smsNumber: string;
+  pushToken: string;
+  hasNotificationPermission: boolean;
+  isSubscribed: boolean;
+  isPushDisabled: boolean;
+  isEmailSubscribed: boolean;
+  isSMSSubscribed: boolean;
+  notificationPermissionStatus: PermissionStatus;
+};
+
+export type LaunchOptions = object; // TODO typing

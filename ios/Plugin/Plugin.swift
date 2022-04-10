@@ -32,8 +32,8 @@ public class CapacitorOnesignal: CAPPlugin {
         }
 
         OneSignal.setMSDKType("capacitor")
-        OneSignal.setAppId(appId)
         OneSignal.initWithLaunchOptions(launchOptions)
+        OneSignal.setAppId(appId)
 
         call.success()
     }
@@ -129,6 +129,15 @@ public class CapacitorOnesignal: CAPPlugin {
             _ in
             call.success()
         }
+    }
+
+    @objc func setLaunchURLsInApp(_ call: CAPPluginCall) {
+        guard let enabled = call.getString("enabled") else {
+            return call.reject("Missing enabled argument")
+        }
+        OneSignal.setLaunchURLsInApp(enabled)
+
+        call.success()
     }
 
     @objc func getLogLevel(_ level: String) -> ONE_S_LOG_LEVEL {

@@ -41,4 +41,8 @@ export class OneSignal {
   removeExternalUserId() {
     return this.onesignal.removeExternalUserId();
   }
+
+  setLaunchURLsInApp(enabled: boolean) {
+    return this.onesignal.setLaunchURLsInApp({ enabled });
+  }
 }

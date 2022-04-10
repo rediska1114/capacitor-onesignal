@@ -14,4 +14,5 @@ CAP_PLUGIN(CapacitorOnesignal, "CapacitorOnesignal",
         CAP_PLUGIN_METHOD(disablePush, CAPPluginReturnPromise);
         CAP_PLUGIN_METHOD(setExternalUserId, CAPPluginReturnPromise);
         CAP_PLUGIN_METHOD(removeExternalUserId, CAPPluginReturnPromise);
+        CAP_PLUGIN_METHOD(setLaunchURLsInApp, CAPPluginReturnPromise);
 )
