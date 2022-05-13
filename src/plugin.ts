@@ -1,6 +1,5 @@
 import {
   CapacitorOnesignalPlugin as ICapacitorOnesignalPlugin,
-  LaunchOptions,
   LogLevel,
 } from './definitions';
 import { Plugins } from '@capacitor/core';
@@ -11,11 +10,13 @@ const CapacitorOnesignalPlugin =
 export class OneSignal {
   private onesignal = CapacitorOnesignalPlugin;
 
+  addListener = this.onesignal.addListener;
+
   setLogLevel(logLevel: LogLevel, visualLevel: LogLevel = LogLevel.NONE) {
     return this.onesignal.setLogLevel({ logLevel, visualLevel });
   }
-  init(appId: string, launchOptions: LaunchOptions = {}) {
-    return this.onesignal.initOneSignal({ appId, launchOptions });
+  init(appId: string) {
+    return this.onesignal.initOneSignal({ appId });
   }
   setProvidesNotificationSettingsView(providesView: boolean) {
     return this.onesignal.setProvidesNotificationSettingsView({ providesView });

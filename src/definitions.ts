@@ -1,3 +1,5 @@
+import { PluginListenerHandle } from '@capacitor/core';
+
 declare module '@capacitor/core' {
   interface PluginRegistry {
     CapacitorOnesignal: CapacitorOnesignalPlugin;
@@ -9,10 +11,7 @@ export interface CapacitorOnesignalPlugin {
     logLevel: LogLevel;
     visualLevel: LogLevel;
   }): Promise<void>;
-  initOneSignal(options: {
-    appId: string;
-    launchOptions: LaunchOptions;
-  }): Promise<void>;
+  initOneSignal(options: { appId: string }): Promise<void>;
   setProvidesNotificationSettingsView(options: {
     providesView: boolean;
   }): Promise<void>;
@@ -24,6 +23,10 @@ export interface CapacitorOnesignalPlugin {
   setExternalUserId(options: { externalUserId: string }): Promise<void>;
   removeExternalUserId(): Promise<void>;
   setLaunchURLsInApp(options: { enabled: boolean }): Promise<void>;
+  addListener(
+    eventName: 'notificationOpened',
+    listenerFunc: NotificationOpenedListener,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
 
 export enum LogLevel {
@@ -59,4 +62,36 @@ export type DeviceState = {
   notificationPermissionStatus: PermissionStatus;
 };
 
-export type LaunchOptions = object; // TODO typing
+export type NotificationOpenedListener = (
+  result: NotificationOpenedResult,
+) => void;
+
+export type NotificationOpenedResult = {
+  action: {
+    actionID: string;
+    OSNotificationActionType: NotificationAction;
+  };
+  notification: {
+    additionalData: object;
+    notificationId: number;
+    body: string;
+    subtitle: string;
+    title: string;
+    launchURL: string;
+    attachments: object;
+    actionButtons: Array<any>;
+    templateId: string;
+    rawPayload: object;
+    category: string;
+    threadId: string;
+    contentAvailable: boolean;
+    mutableContent: boolean;
+    badge: number;
+    badgeIncrement: number;
+  };
+};
+
+export enum NotificationAction {
+  Opened = 0,
+  ActionTaken = 1,
+}

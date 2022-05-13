@@ -27,13 +27,9 @@ public class CapacitorOnesignal: CAPPlugin {
             return call.reject("Missing appId argument")
         }
 
-        guard let launchOptions = call.getObject("launchOptions") else {
-            return call.reject("Missing launchOptions argument")
-        }
-
         OneSignal.setMSDKType("capacitor")
-        OneSignal.initWithLaunchOptions(launchOptions)
         OneSignal.setAppId(appId)
+        OneSignal.setNotificationOpenedHandler(_notificationOpenedHandler)
 
         call.success()
     }
@@ -58,15 +54,17 @@ public class CapacitorOnesignal: CAPPlugin {
 //     }];
     // }
 
-    // - (void)setNotificationOpenedHandler:(CDVInvokedUrlCommand*)command {
-//     notificationOpenedCallbackId = command.callbackId;
+    @objc func _notificationOpenedHandler(_ result: OSNotificationOpenedResult) {
+        let data = [
+            "action": [
+                "type": result.action.type.rawValue,
+                "actionId": result.action.actionId as Any,
+            ],
+            "notification": result.notification.jsonRepresentation(),
+        ]
 
-//     [OneSignal setNotificationOpenedHandler:^(OSNotificationOpenedResult * _Nonnull result) {
-//         actionNotification = result;
-//         if (pluginCommandDelegate)
-//             processNotificationOpened(actionNotification);
-//     }];
-    // }
+        notifyListeners("notificationOpened", data: data, retainUntilConsumed: true)
+    }
 
     @objc func getDeviceState(_ call: CAPPluginCall) {
         let deviceState = OneSignal.getDeviceState()
