@@ -7,8 +7,8 @@ import UserNotifications
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
-@objc(CapacitorOnesignal)
-public class CapacitorOnesignal: CAPPlugin {
+@objc(OneSignalPlugin)
+public class OneSignalPlugin: CAPPlugin {
     @objc func setLogLevel(_ call: CAPPluginCall) {
         guard let _logLevel = call.getString("logLevel") else {
             return call.reject("Missing logLevel argument")

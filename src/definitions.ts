@@ -1,12 +1,6 @@
 import { PluginListenerHandle } from '@capacitor/core';
 
-declare module '@capacitor/core' {
-  interface PluginRegistry {
-    CapacitorOnesignal: CapacitorOnesignalPlugin;
-  }
-}
-
-export interface CapacitorOnesignalPlugin {
+export interface OneSignalPlugin {
   setLogLevel(options: {
     logLevel: LogLevel;
     visualLevel: LogLevel;

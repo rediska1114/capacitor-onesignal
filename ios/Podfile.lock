@@ -1,7 +1,7 @@
 PODS:
-  - Capacitor (2.4.7):
+  - Capacitor (3.6.0):
     - CapacitorCordova
-  - CapacitorCordova (2.4.7)
+  - CapacitorCordova (3.6.0)
   - OneSignalXCFramework (3.10.2)
 
 DEPENDENCIES:
@@ -20,10 +20,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@capacitor/ios"
 
 SPEC CHECKSUMS:
-  Capacitor: 4cd7b342d5a15b1f6f333d687358953afd7b2d8b
-  CapacitorCordova: 2c9d6e28d9d86c4da087fa2c3537c1841954bb12
+  Capacitor: 838de9244464702bc67e3d47e81c471b79500059
+  CapacitorCordova: d4a821a58b9b14452b05c583b0e52379e45810e5
   OneSignalXCFramework: 3939b13538b442b6c63c5304c70f03033bf9a2f6
 
-PODFILE CHECKSUM: 20c066e388612fe0aeba3a71c7432a549c872ef7
+PODFILE CHECKSUM: 13b768dfcf32964f67bde2f312a41d8431a8fd8c
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.10.1
