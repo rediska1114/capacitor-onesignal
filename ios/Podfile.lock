@@ -2,16 +2,25 @@ PODS:
   - Capacitor (3.6.0):
     - CapacitorCordova
   - CapacitorCordova (3.6.0)
-  - OneSignalXCFramework (3.10.2)
+  - OneSignal (3.11.4):
+    - OneSignal/OneSignalCore (= 3.11.4)
+    - OneSignal/OneSignalExtension (= 3.11.4)
+    - OneSignal/OneSignalOutcomes (= 3.11.4)
+  - OneSignal/OneSignalCore (3.11.4)
+  - OneSignal/OneSignalExtension (3.11.4):
+    - OneSignal/OneSignalCore
+    - OneSignal/OneSignalOutcomes
+  - OneSignal/OneSignalOutcomes (3.11.4):
+    - OneSignal/OneSignalCore
 
 DEPENDENCIES:
   - "Capacitor (from `../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../node_modules/@capacitor/ios`)"
-  - OneSignalXCFramework (< 4.0, >= 3.0.0)
+  - OneSignal (= 3.11.4)
 
 SPEC REPOS:
   trunk:
-    - OneSignalXCFramework
+    - OneSignal
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -22,8 +31,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 838de9244464702bc67e3d47e81c471b79500059
   CapacitorCordova: d4a821a58b9b14452b05c583b0e52379e45810e5
-  OneSignalXCFramework: 3939b13538b442b6c63c5304c70f03033bf9a2f6
+  OneSignal: 81271660d860f857d20f38117bbf3d47a4f0151e
 
-PODFILE CHECKSUM: 13b768dfcf32964f67bde2f312a41d8431a8fd8c
+PODFILE CHECKSUM: 4db720d0f97dee221d95bd436180adda36ec23b0
 
 COCOAPODS: 1.10.1
