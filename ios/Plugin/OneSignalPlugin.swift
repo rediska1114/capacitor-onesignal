@@ -30,7 +30,7 @@ public class OneSignalPlugin: CAPPlugin {
         OneSignal.setMSDKType("capacitor")
         OneSignal.setAppId(appId)
         OneSignal.setNotificationOpenedHandler(_notificationOpenedHandler)
-        OneSignal.setNotificationWillShowInForegroundHandler(_notificationWillShowInForegroundHandler)
+        // OneSignal.setNotificationWillShowInForegroundHandler(_notificationWillShowInForegroundHandler)
 
         call.success()
     }
@@ -67,9 +67,9 @@ public class OneSignalPlugin: CAPPlugin {
         notifyListeners("notificationOpened", data: data, retainUntilConsumed: true)
     }
 
-    @objc func _notificationWillShowInForegroundHandler(_ notification: OSNotification, completion: OSNotificationDisplayResponse ) {
+    // @objc func _notificationWillShowInForegroundHandler(_ notification: OSNotification, completion: OSNotificationDisplayResponse ) {
         
-    }
+    // }
 
     @objc func getDeviceState(_ call: CAPPluginCall) {
         let deviceState = OneSignal.getDeviceState()

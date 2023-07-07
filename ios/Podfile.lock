@@ -1,22 +1,22 @@
 PODS:
-  - Capacitor (3.6.0):
+  - Capacitor (5.1.1):
     - CapacitorCordova
-  - CapacitorCordova (3.6.0)
-  - OneSignal (3.11.4):
-    - OneSignal/OneSignalCore (= 3.11.4)
-    - OneSignal/OneSignalExtension (= 3.11.4)
-    - OneSignal/OneSignalOutcomes (= 3.11.4)
-  - OneSignal/OneSignalCore (3.11.4)
-  - OneSignal/OneSignalExtension (3.11.4):
+  - CapacitorCordova (5.1.1)
+  - OneSignal (3.12.5):
+    - OneSignal/OneSignalCore (= 3.12.5)
+    - OneSignal/OneSignalExtension (= 3.12.5)
+    - OneSignal/OneSignalOutcomes (= 3.12.5)
+  - OneSignal/OneSignalCore (3.12.5)
+  - OneSignal/OneSignalExtension (3.12.5):
     - OneSignal/OneSignalCore
     - OneSignal/OneSignalOutcomes
-  - OneSignal/OneSignalOutcomes (3.11.4):
+  - OneSignal/OneSignalOutcomes (3.12.5):
     - OneSignal/OneSignalCore
 
 DEPENDENCIES:
   - "Capacitor (from `../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../node_modules/@capacitor/ios`)"
-  - OneSignal (= 3.11.4)
+  - OneSignal (= 3.12.5)
 
 SPEC REPOS:
   trunk:
@@ -29,10 +29,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@capacitor/ios"
 
 SPEC CHECKSUMS:
-  Capacitor: 838de9244464702bc67e3d47e81c471b79500059
-  CapacitorCordova: d4a821a58b9b14452b05c583b0e52379e45810e5
-  OneSignal: 81271660d860f857d20f38117bbf3d47a4f0151e
+  Capacitor: 55956e1199b63efcd7f2dedffa5c6b9129c45aae
+  CapacitorCordova: b31a46ad379c93a5c04e0598a6164e8cb90c2bb2
+  OneSignal: 36f1f46ea4be161a5c00ed0af63f8d31653f0c1d
 
-PODFILE CHECKSUM: 4db720d0f97dee221d95bd436180adda36ec23b0
+PODFILE CHECKSUM: 603a9f2c99113975c7af3782f168d3a7df73728d
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.12.1
