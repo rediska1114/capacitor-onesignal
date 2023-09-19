@@ -74,7 +74,7 @@ public class OneSignalPlugin: CAPPlugin {
     @objc func getDeviceState(_ call: CAPPluginCall) {
         let deviceState = OneSignal.getDeviceState()
 
-        call.success(["deviceState": deviceState as Any]) // TODO: json convert
+        call.success(["deviceState": deviceState?.toDictionary() ?? [:]])
     }
 
     @objc func setLanguage(_ call: CAPPluginCall) {
