@@ -21,6 +21,11 @@ export interface OneSignalPlugin {
     eventName: 'notificationOpened',
     listenerFunc: NotificationOpenedListener,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
+
+  addListener(
+    eventName: 'onPermissionChanged',
+    listenerFunc: PermissionChangedListener,
+  ): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
 
 export enum LogLevel {
@@ -60,6 +65,10 @@ export type NotificationOpenedListener = (
   result: NotificationOpenedResult,
 ) => void;
 
+export type PermissionChangedListener = (
+  result: PermissionChangedResult,
+) => void;
+
 export type NotificationOpenedResult = {
   action: {
     actionID: string;
@@ -83,6 +92,18 @@ export type NotificationOpenedResult = {
     badge: number;
     badgeIncrement: number;
   };
+};
+
+export type PermissionState = {
+  reachable: boolean;
+  hasPrompted: boolean;
+  providesAppNotificationSettings: boolean;
+  status: PermissionStatus;
+};
+
+export type PermissionChangedResult = {
+  to: PermissionState;
+  from: PermissionState;
 };
 
 export enum NotificationAction {
