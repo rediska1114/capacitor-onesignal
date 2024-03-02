@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - master
-      - capacitor-3
+      - capacitor-*
 
 jobs:
   publish:
