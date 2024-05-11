@@ -6,37 +6,81 @@ const CapacitorOneSignal = registerPlugin<OneSignalPlugin>('OneSignal', {
   // web: () => import('./web').then(m => new m.OneSignalWeb()),
 });
 
+const LIB_VERSION = import.meta.env.PUBLIC_VERSION;
+
 export class OneSignal {
   private onesignal = CapacitorOneSignal;
 
-  addListener = this.onesignal.addListener;
+  private resolveActivation: ((value: void) => void) | null = null;
+  private activatingPromise: Promise<void> | null = new Promise(
+    resolve => (this.resolveActivation = resolve),
+  );
 
-  init(appId: string) {
-    return this.onesignal.initOneSignal({ appId });
+  private async awaitActivation() {
+    if (this.activatingPromise) {
+      await this.activatingPromise;
+      this.activatingPromise = null;
+    }
   }
-  setLogLevel(logLevel: LogLevel) {
+
+  async init(appId: string) {
+    // transform 5.1.3 to 050103
+    const libVersion = LIB_VERSION.split('.')
+      .map(v => v.padStart(2, '0'))
+      .join('');
+
+    const promise = this.onesignal.initOneSignal({
+      appId,
+      libVersion,
+    });
+
+    if (!this.activatingPromise) {
+      this.activatingPromise = promise;
+    }
+
+    const result = await promise;
+
+    if (this.resolveActivation) {
+      this.resolveActivation();
+      this.resolveActivation = null;
+    }
+
+    return result;
+  }
+  async setLogLevel(logLevel: LogLevel) {
     return this.onesignal.setLogLevel({ logLevel });
   }
-  setProvidesNotificationSettingsView(providesView: boolean) {
+  async setProvidesNotificationSettingsView(providesView: boolean) {
     return this.onesignal.setProvidesNotificationSettingsView({ providesView });
   }
-  getNotificationPermissionStatus() {
+  async getNotificationPermissionStatus() {
+    await this.awaitActivation();
     return this.onesignal.getNotificationPermissionStatus().then(d => d.status);
   }
-  setLanguage(language: string) {
+  async setLanguage(language: string) {
+    await this.awaitActivation();
+
     return this.onesignal.setLanguage({ language });
   }
-  requestNotificationsPermission() {
+  async requestNotificationsPermission() {
+    await this.awaitActivation();
+
     return this.onesignal
       .requestNotificationsPermission()
       .then(a => a.accepted);
   }
-  login(externalUserId: string) {
+  async login(externalUserId: string) {
+    await this.awaitActivation();
+
     return this.onesignal.login({ externalUserId });
   }
-  logout() {
+  async logout() {
+    await this.awaitActivation();
+
     return this.onesignal.logout();
   }
+
+  addListener = this.onesignal.addListener;
 }
 
 export * from './definitions';

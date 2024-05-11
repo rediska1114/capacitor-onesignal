@@ -1,7 +1,7 @@
 import { PluginListenerHandle } from '@capacitor/core';
 
 export interface OneSignalPlugin {
-  initOneSignal(options: { appId: string }): Promise<void>;
+  initOneSignal(options: { appId: string, libVersion?: string }): Promise<void>;
   setLogLevel(options: { logLevel: LogLevel }): Promise<void>;
   setProvidesNotificationSettingsView(options: {
     providesView: boolean;

@@ -21,6 +21,9 @@ public class OneSignalPlugin: CAPPlugin, OSNotificationPermissionObserver,
     }
 
     OneSignalWrapper.sdkType = "capacitor"
+    if let libVersion = call.getString("libVersion") {
+      OneSignalWrapper.sdkVersion = libVersion
+    }
 
     OneSignal.Notifications.addPermissionObserver(self as OSNotificationPermissionObserver)
     OneSignal.Notifications.addClickListener(self)
@@ -35,9 +38,6 @@ public class OneSignalPlugin: CAPPlugin, OSNotificationPermissionObserver,
   @objc func setLogLevel(_ call: CAPPluginCall) {
     guard let _logLevel = call.getString("logLevel") else {
       return call.reject("Missing logLevel argument")
-    }
-    guard let _visualLevel = call.getString("visualLevel") else {
-      return call.reject("Missing visualLevel argument")
     }
 
     OneSignal.Debug.setLogLevel(getLogLevel(_logLevel))
@@ -104,13 +104,14 @@ public class OneSignalPlugin: CAPPlugin, OSNotificationPermissionObserver,
   // TODO: sendTags
   // TODO: deleteTags
 
-    public func onClick(event: OSNotificationClickEvent) {
+  public func onClick(event: OSNotificationClickEvent) {
     notifyListeners(
       "notificationClicked", data: ["event": event.jsonRepresentation()], retainUntilConsumed: true)
   }
 
   public func onNotificationPermissionDidChange(_ permission: Bool) {
-    notifyListeners("permissionChanged", data: ["permission": permission], retainUntilConsumed: true)
+    notifyListeners(
+      "permissionChanged", data: ["permission": permission], retainUntilConsumed: true)
   }
 }
 
