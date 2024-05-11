@@ -2,21 +2,57 @@ PODS:
   - Capacitor (5.1.1):
     - CapacitorCordova
   - CapacitorCordova (5.1.1)
-  - OneSignal (3.12.5):
-    - OneSignal/OneSignalCore (= 3.12.5)
-    - OneSignal/OneSignalExtension (= 3.12.5)
-    - OneSignal/OneSignalOutcomes (= 3.12.5)
-  - OneSignal/OneSignalCore (3.12.5)
-  - OneSignal/OneSignalExtension (3.12.5):
+  - OneSignal (5.2.0):
+    - OneSignal/OneSignalComplete (= 5.2.0)
+  - OneSignal/OneSignal (5.2.0):
+    - OneSignal/OneSignalCore
+    - OneSignal/OneSignalExtension
+    - OneSignal/OneSignalLiveActivities
+    - OneSignal/OneSignalNotifications
+    - OneSignal/OneSignalOSCore
+    - OneSignal/OneSignalOutcomes
+    - OneSignal/OneSignalUser
+  - OneSignal/OneSignalComplete (5.2.0):
+    - OneSignal/OneSignal
+    - OneSignal/OneSignalInAppMessages
+    - OneSignal/OneSignalLocation
+  - OneSignal/OneSignalCore (5.2.0)
+  - OneSignal/OneSignalExtension (5.2.0):
     - OneSignal/OneSignalCore
     - OneSignal/OneSignalOutcomes
-  - OneSignal/OneSignalOutcomes (3.12.5):
+  - OneSignal/OneSignalInAppMessages (5.2.0):
     - OneSignal/OneSignalCore
+    - OneSignal/OneSignalNotifications
+    - OneSignal/OneSignalOSCore
+    - OneSignal/OneSignalOutcomes
+    - OneSignal/OneSignalUser
+  - OneSignal/OneSignalLiveActivities (5.2.0):
+    - OneSignal/OneSignalCore
+    - OneSignal/OneSignalOSCore
+    - OneSignal/OneSignalUser
+  - OneSignal/OneSignalLocation (5.2.0):
+    - OneSignal/OneSignalCore
+    - OneSignal/OneSignalNotifications
+    - OneSignal/OneSignalOSCore
+    - OneSignal/OneSignalUser
+  - OneSignal/OneSignalNotifications (5.2.0):
+    - OneSignal/OneSignalCore
+    - OneSignal/OneSignalExtension
+    - OneSignal/OneSignalOutcomes
+  - OneSignal/OneSignalOSCore (5.2.0):
+    - OneSignal/OneSignalCore
+  - OneSignal/OneSignalOutcomes (5.2.0):
+    - OneSignal/OneSignalCore
+  - OneSignal/OneSignalUser (5.2.0):
+    - OneSignal/OneSignalCore
+    - OneSignal/OneSignalNotifications
+    - OneSignal/OneSignalOSCore
+    - OneSignal/OneSignalOutcomes
 
 DEPENDENCIES:
   - "Capacitor (from `../node_modules/@capacitor/ios`)"
   - "CapacitorCordova (from `../node_modules/@capacitor/ios`)"
-  - OneSignal (= 3.12.5)
+  - OneSignal (= 5.2.0)
 
 SPEC REPOS:
   trunk:
@@ -31,8 +67,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 55956e1199b63efcd7f2dedffa5c6b9129c45aae
   CapacitorCordova: b31a46ad379c93a5c04e0598a6164e8cb90c2bb2
-  OneSignal: 36f1f46ea4be161a5c00ed0af63f8d31653f0c1d
+  OneSignal: 29009a7cec677d39fc17445b6e003b33f109f651
 
-PODFILE CHECKSUM: 603a9f2c99113975c7af3782f168d3a7df73728d
+PODFILE CHECKSUM: 000cba2b63e9d2b7ac655722c17a702e79ad8a44
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

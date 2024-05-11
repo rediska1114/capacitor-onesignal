@@ -1,23 +1,33 @@
 import Capacitor
 import Foundation
-import OneSignal
+import OneSignalFramework
 import UserNotifications
 
 /// Please read the Capacitor iOS Plugin Development Guide
 /// here: https://capacitorjs.com/docs/plugins/ios
 @objc(OneSignalPlugin)
-public class OneSignalPlugin: CAPPlugin, OSPermissionObserver {
+public class OneSignalPlugin: CAPPlugin, OSNotificationPermissionObserver,
+  OSNotificationClickListener
+{
+  var didInitialize = false
 
   @objc func initOneSignal(_ call: CAPPluginCall) {
+    if didInitialize {
+      return call.resolve()
+    }
+
     guard let appId = call.getString("appId") else {
       return call.reject("Missing appId argument")
     }
 
-    OneSignal.setMSDKType("capacitor")
-    OneSignal.setAppId(appId)
-    OneSignal.setNotificationOpenedHandler(_notificationOpenedHandler)
-    OneSignal.setNotificationWillShowInForegroundHandler(_notificationWillShowInForegroundHandler)
-    OneSignal.add(self)
+    OneSignalWrapper.sdkType = "capacitor"
+
+    OneSignal.Notifications.addPermissionObserver(self as OSNotificationPermissionObserver)
+    OneSignal.Notifications.addClickListener(self)
+
+    OneSignal.initialize(appId, withLaunchOptions: nil)
+
+    didInitialize = true
 
     call.resolve()
   }
@@ -30,7 +40,7 @@ public class OneSignalPlugin: CAPPlugin, OSPermissionObserver {
       return call.reject("Missing visualLevel argument")
     }
 
-    OneSignal.setLogLevel(getLogLevel(_logLevel), visualLevel: getLogLevel(_visualLevel))
+    OneSignal.Debug.setLogLevel(getLogLevel(_logLevel))
 
     call.resolve()
   }
@@ -45,47 +55,15 @@ public class OneSignalPlugin: CAPPlugin, OSPermissionObserver {
     call.resolve()
   }
 
-  //     - (void)setNotificationWillShowInForegroundHandler:(CDVInvokedUrlCommand*)command {
-  //     notificationWillShowInForegoundCallbackId = command.callbackId;
+  @objc func getNotificationPermissionStatus(_ call: CAPPluginCall) {
+    // 0 = NotDetermined
+    // 1 = Denied
+    // 2 = Authorized
+    // 3 = Provisional (only available in iOS 12+)
+    // 4 = Ephemeral (only available in iOS 14+)
+    let status = OneSignal.Notifications.permissionNative
 
-  //     [OneSignal setNotificationWillShowInForegroundHandler:^(OSNotification *notification, OSNotificationDisplayResponse completion) {
-  //         self.receivedNotificationCache[notification.notificationId] = notification;
-  //         self.notificationCompletionCache[notification.notificationId] = completion;
-  //         processNotificationWillShowInForeground(notification);
-  //     }];
-  // }
-
-  @objc func _notificationOpenedHandler(_ result: OSNotificationOpenedResult) {
-    let data = [
-      "action": [
-        "type": result.action.type.rawValue,
-        "actionId": result.action.actionId as Any,
-      ],
-      "notification": result.notification.jsonRepresentation(),
-    ]
-
-    notifyListeners("notificationOpened", data: data, retainUntilConsumed: true)
-  }
-
-  @objc func _notificationWillShowInForegroundHandler(
-    _ notification: OSNotification, completion: OSNotificationDisplayResponse
-  ) {
-
-  }
-
-  public func onOSPermissionChanged(_ stateChanges: OSPermissionStateChanges) {
-    notifyListeners(
-      "onPermissionChanged",
-      data: [
-        "to": stateChanges.to.toDictionary(),
-        "from": stateChanges.from.toDictionary(),
-      ], retainUntilConsumed: true)
-  }
-
-  @objc func getDeviceState(_ call: CAPPluginCall) {
-    let deviceState = OneSignal.getDeviceState()
-
-    call.resolve(["deviceState": deviceState?.jsonRepresentation() ?? [:]])
+    call.resolve(["status": status.rawValue])
   }
 
   @objc func setLanguage(_ call: CAPPluginCall) {
@@ -93,82 +71,63 @@ public class OneSignalPlugin: CAPPlugin, OSPermissionObserver {
       return call.reject("Missing language argument")
     }
 
-    OneSignal.setLanguage(language)
+    OneSignal.User.setLanguage(language)
+
+    call.resolve()
+  }
+
+  @objc func requestNotificationsPermission(_ call: CAPPluginCall) {
+    OneSignal.Notifications.requestPermission(
+      { accepted in
+        call.resolve(["accepted": accepted])
+      }, fallbackToSettings: true)
+
+  }
+
+  @objc func login(_ call: CAPPluginCall) {
+    guard let externalUserId = call.getString("externalUserId") else {
+      return call.reject("Missing externalUserId argument")
+    }
+
+    OneSignal.login(externalUserId)
+    call.resolve()
+
+  }
+
+  @objc func logout(_ call: CAPPluginCall) {
+    OneSignal.logout()
 
     call.resolve()
   }
 
   // TODO: getTags
-
   // TODO: sendTags
-
   // TODO: deleteTags
 
-  @objc func promptForPushNotifications(_ call: CAPPluginCall) {
-    OneSignal.promptForPushNotifications(userResponse: {
-      accepted in
-      call.resolve(["accepted": accepted])
-    })
+    public func onClick(event: OSNotificationClickEvent) {
+    notifyListeners(
+      "notificationClicked", data: ["event": event.jsonRepresentation()], retainUntilConsumed: true)
   }
 
-  @objc func register(_ call: CAPPluginCall) {
-    OneSignal.register {
-      accepted in
-      call.resolve(["accepted": accepted])
-    }
+  public func onNotificationPermissionDidChange(_ permission: Bool) {
+    notifyListeners("permissionChanged", data: ["permission": permission], retainUntilConsumed: true)
   }
+}
 
-  @objc func disablePush(_ call: CAPPluginCall) {
-    guard let disabled = call.getBool("disabled") else {
-      return call.reject("Missing disabled argument")
-    }
-
-    OneSignal.disablePush(disabled)
-    call.resolve()
-  }
-
-  @objc func setExternalUserId(_ call: CAPPluginCall) {
-    guard let externalUserId = call.getString("externalUserId") else {
-      return call.reject("Missing externalUserId argument")
-    }
-
-    OneSignal.setExternalUserId(externalUserId) {
-      _ in
-      call.resolve()
-    }
-  }
-
-  @objc func removeExternalUserId(_ call: CAPPluginCall) {
-    OneSignal.removeExternalUserId {
-      _ in
-      call.resolve()
-    }
-  }
-
-  @objc func setLaunchURLsInApp(_ call: CAPPluginCall) {
-    guard let enabled = call.getBool("enabled") else {
-      return call.reject("Missing enabled argument")
-    }
-    OneSignal.setLaunchURLsInApp(enabled)
-
-    call.resolve()
-  }
-
-  @objc func getLogLevel(_ level: String) -> ONE_S_LOG_LEVEL {
-    if level == "FATAL" {
-      return ONE_S_LOG_LEVEL.LL_FATAL
-    } else if level == "ERROR" {
-      return ONE_S_LOG_LEVEL.LL_ERROR
-    } else if level == "WARN" {
-      return ONE_S_LOG_LEVEL.LL_WARN
-    } else if level == "INFO" {
-      return ONE_S_LOG_LEVEL.LL_INFO
-    } else if level == "DEBUG" {
-      return ONE_S_LOG_LEVEL.LL_DEBUG
-    } else if level == "VERBOSE" {
-      return ONE_S_LOG_LEVEL.LL_VERBOSE
-    } else {
-      return ONE_S_LOG_LEVEL.LL_NONE
-    }
+func getLogLevel(_ level: String) -> ONE_S_LOG_LEVEL {
+  if level == "FATAL" {
+    return ONE_S_LOG_LEVEL.LL_FATAL
+  } else if level == "ERROR" {
+    return ONE_S_LOG_LEVEL.LL_ERROR
+  } else if level == "WARN" {
+    return ONE_S_LOG_LEVEL.LL_WARN
+  } else if level == "INFO" {
+    return ONE_S_LOG_LEVEL.LL_INFO
+  } else if level == "DEBUG" {
+    return ONE_S_LOG_LEVEL.LL_DEBUG
+  } else if level == "VERBOSE" {
+    return ONE_S_LOG_LEVEL.LL_VERBOSE
+  } else {
+    return ONE_S_LOG_LEVEL.LL_NONE
   }
 }

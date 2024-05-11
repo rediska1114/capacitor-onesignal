@@ -1,29 +1,23 @@
 import { PluginListenerHandle } from '@capacitor/core';
 
 export interface OneSignalPlugin {
-  setLogLevel(options: {
-    logLevel: LogLevel;
-    visualLevel: LogLevel;
-  }): Promise<void>;
   initOneSignal(options: { appId: string }): Promise<void>;
+  setLogLevel(options: { logLevel: LogLevel }): Promise<void>;
   setProvidesNotificationSettingsView(options: {
     providesView: boolean;
   }): Promise<void>;
-  getDeviceState(): Promise<{ deviceState: DeviceState }>;
+  getNotificationPermissionStatus(): Promise<{ status: PermissionStatus }>;
   setLanguage(options: { language: string }): Promise<void>;
-  promptForPushNotifications(): Promise<{ accepted: boolean }>;
-  register(): Promise<{ accepted: boolean }>;
-  disablePush(options: { disabled: boolean }): Promise<void>;
-  setExternalUserId(options: { externalUserId: string }): Promise<void>;
-  removeExternalUserId(): Promise<void>;
-  setLaunchURLsInApp(options: { enabled: boolean }): Promise<void>;
+  requestNotificationsPermission(): Promise<{ accepted: boolean }>;
+  login(options: { externalUserId: string }): Promise<void>;
+  logout(): Promise<void>;
   addListener(
-    eventName: 'notificationOpened',
-    listenerFunc: NotificationOpenedListener,
+    eventName: 'notificationClicked',
+    listenerFunc: NotificationClickedListener,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 
   addListener(
-    eventName: 'onPermissionChanged',
+    eventName: 'permissionChanged',
     listenerFunc: PermissionChangedListener,
   ): Promise<PluginListenerHandle> & PluginListenerHandle;
 }
@@ -46,67 +40,47 @@ export enum PermissionStatus {
   Ephemeral = 4,
 }
 
-export type DeviceState = {
-  userId: string;
-  emailUserId: string;
-  smsUserId: string;
-  emailAddress: string;
-  smsNumber: string;
-  pushToken: string;
-  hasNotificationPermission: boolean;
-  isSubscribed: boolean;
-  isPushDisabled: boolean;
-  isEmailSubscribed: boolean;
-  isSMSSubscribed: boolean;
-  notificationPermissionStatus: PermissionStatus;
-};
-
-export type NotificationOpenedListener = (
-  result: NotificationOpenedResult,
+export type NotificationClickedListener = (
+  result: NotificationClickedResult,
 ) => void;
 
 export type PermissionChangedListener = (
   result: PermissionChangedResult,
 ) => void;
 
-export type NotificationOpenedResult = {
-  action: {
-    actionID: string;
-    OSNotificationActionType: NotificationAction;
-  };
-  notification: {
-    additionalData: object;
-    notificationId: number;
-    body: string;
-    subtitle: string;
-    title: string;
-    launchURL: string;
-    attachments: object;
-    actionButtons: Array<any>;
-    templateId: string;
-    rawPayload: object;
-    category: string;
-    threadId: string;
-    contentAvailable: boolean;
-    mutableContent: boolean;
-    badge: number;
-    badgeIncrement: number;
-  };
-};
+export type NotificationClickedResult = {
+  event: {
+    result: {
+      actionId: string;
+      url: string;
+    };
+    notification: {
+      notificationId: string;
+      templateId: string | null;
+      templateName: string | null;
+      contentAvailable: boolean;
+      mutableContent: boolean;
 
-export type PermissionState = {
-  reachable: boolean;
-  hasPrompted: boolean;
-  providesAppNotificationSettings: boolean;
-  status: PermissionStatus;
+      category: string;
+      badge: number;
+      badgeIncrement: number;
+      sound: string;
+      title: string;
+      subtitle: string;
+      body: string;
+      launchURL: string;
+      additionalData: object;
+      attachments: object;
+      actionButtons: Array<any>;
+      rawPayload: object;
+      threadId: string;
+      relevanceScore: number;
+      interruptionLevel: string | null;
+      collapseId: string;
+    };
+  };
 };
 
 export type PermissionChangedResult = {
-  to: PermissionState;
-  from: PermissionState;
+  permission: boolean;
 };
-
-export enum NotificationAction {
-  Opened = 0,
-  ActionTaken = 1,
-}

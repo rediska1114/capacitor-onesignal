@@ -11,39 +11,31 @@ export class OneSignal {
 
   addListener = this.onesignal.addListener;
 
-  setLogLevel(logLevel: LogLevel, visualLevel: LogLevel = LogLevel.NONE) {
-    return this.onesignal.setLogLevel({ logLevel, visualLevel });
-  }
   init(appId: string) {
     return this.onesignal.initOneSignal({ appId });
+  }
+  setLogLevel(logLevel: LogLevel) {
+    return this.onesignal.setLogLevel({ logLevel });
   }
   setProvidesNotificationSettingsView(providesView: boolean) {
     return this.onesignal.setProvidesNotificationSettingsView({ providesView });
   }
-  getDeviceState() {
-    return this.onesignal.getDeviceState().then(d => d.deviceState);
+  getNotificationPermissionStatus() {
+    return this.onesignal.getNotificationPermissionStatus().then(d => d.status);
   }
   setLanguage(language: string) {
     return this.onesignal.setLanguage({ language });
   }
-  promptForPushNotifications() {
-    return this.onesignal.promptForPushNotifications().then(a => a.accepted);
+  requestNotificationsPermission() {
+    return this.onesignal
+      .requestNotificationsPermission()
+      .then(a => a.accepted);
   }
-  register() {
-    return this.onesignal.register().then(a => a.accepted);
+  login(externalUserId: string) {
+    return this.onesignal.login({ externalUserId });
   }
-  disablePush(disabled: boolean) {
-    return this.onesignal.disablePush({ disabled });
-  }
-  setExternalUserId(externalUserId: string) {
-    return this.onesignal.setExternalUserId({ externalUserId });
-  }
-  removeExternalUserId() {
-    return this.onesignal.removeExternalUserId();
-  }
-
-  setLaunchURLsInApp(enabled: boolean) {
-    return this.onesignal.setLaunchURLsInApp({ enabled });
+  logout() {
+    return this.onesignal.logout();
   }
 }
 
