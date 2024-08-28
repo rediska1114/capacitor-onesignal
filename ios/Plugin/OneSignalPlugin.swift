@@ -132,3 +132,4 @@ func getLogLevel(_ level: String) -> ONE_S_LOG_LEVEL {
     return ONE_S_LOG_LEVEL.LL_NONE
   }
 }
+

@@ -1,6 +1,6 @@
 {
   "name": "capacitor-onesignal",
-  "version": "3.0.1",
+  "version": "4.0.0-beta.0",
   "description": "OneSignal plugin for capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -17,10 +17,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rediska1114/capacitor-onesignal.git.git"
+    "url": "git+https://github.com/rediska1114/capacitor-onesignal.git"
   },
   "bugs": {
-    "url": "https://github.com/rediska1114/capacitor-onesignal.git/issues"
+    "url": "https://github.com/rediska1114/capacitor-onesignal/issues"
   },
   "keywords": [
     "capacitor",
@@ -72,6 +72,9 @@
   "capacitor": {
     "ios": {
       "src": "ios"
+    },
+    "android": {
+      "src": "android"
     }
   }
 }

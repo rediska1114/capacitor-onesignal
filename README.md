@@ -1,14 +1,23 @@
 # Capacitor OneSignal plugin
 
-Currently only works on ios, but android support will be coming soon
-
-
 ## Setup for iOS
 
 1. Create a new app on OneSignal and follow the instructions to set up your app for iOS
 
 https://documentation.onesignal.com/docs/ios-sdk-setup
 
+## Setup for Android
+
+1. Create a new app on OneSignal and follow the instructions to set up your app for Android
+
+https://documentation.onesignal.com/docs/android-sdk-setup
+
+https://documentation.onesignal.com/docs/android-firebase-credentials
+
+## BREAKING CHANGES in 4.x.x version
+
+- Added android support
+- Change OSNotification interface fields
 
 ## BREAKING CHANGES in 2.x.x version
 

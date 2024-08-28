@@ -1,7 +1,7 @@
 import { PluginListenerHandle } from '@capacitor/core';
 
 export interface OneSignalPlugin {
-  initOneSignal(options: { appId: string, libVersion?: string }): Promise<void>;
+  initOneSignal(options: { appId: string; libVersion?: string }): Promise<void>;
   setLogLevel(options: { logLevel: LogLevel }): Promise<void>;
   setProvidesNotificationSettingsView(options: {
     providesView: boolean;
@@ -54,33 +54,51 @@ export type NotificationClickedResult = {
       actionId: string;
       url: string;
     };
-    notification: {
-      notificationId: string;
-      templateId: string | null;
-      templateName: string | null;
-      contentAvailable: boolean;
-      mutableContent: boolean;
-
-      category: string;
-      badge: number;
-      badgeIncrement: number;
-      sound: string;
-      title: string;
-      subtitle: string;
-      body: string;
-      launchURL: string;
-      additionalData: object;
-      attachments: object;
-      actionButtons: Array<any>;
-      rawPayload: object;
-      threadId: string;
-      relevanceScore: number;
-      interruptionLevel: string | null;
-      collapseId: string;
-    };
+    notification: OSNotification;
   };
 };
 
 export type PermissionChangedResult = {
   permission: boolean;
+};
+
+export type OSNotification = {
+  body: string;
+  sound?: string;
+  title?: string;
+  launchURL?: string;
+  rawPayload: object | string; // platform bridges return different types
+  actionButtons?: object[];
+  additionalData?: object;
+  notificationId: string;
+} & (OSNotificationAndroid | OSNotificationIOS);
+
+export type OSNotificationAndroid = {
+  groupKey?: string;
+  groupMessage?: string;
+  ledColor?: string;
+  priority?: number;
+  smallIcon?: string;
+  largeIcon?: string;
+  bigPicture?: string;
+  collapseId?: string;
+  fromProjectNumber?: string;
+  smallIconAccentColor?: string;
+  lockScreenVisibility?: string;
+  androidNotificationId?: number;
+};
+
+export type OSNotificationIOS = {
+  badge?: string;
+  badgeIncrement?: string;
+  category?: string;
+  threadId?: string;
+  subtitle?: string;
+  templateId?: string;
+  templateName?: string;
+  attachments?: object;
+  mutableContent?: boolean;
+  contentAvailable?: string;
+  relevanceScore?: number;
+  interruptionLevel?: string;
 };
