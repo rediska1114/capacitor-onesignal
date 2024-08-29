@@ -13,12 +13,16 @@ import com.onesignal.notifications.INotification
 import com.onesignal.notifications.INotificationClickEvent
 import com.onesignal.notifications.INotificationClickListener
 import com.onesignal.notifications.IPermissionObserver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @CapacitorPlugin(name = "OneSignal")
 class OneSignalPlugin : Plugin(), IPermissionObserver {
   private var oneSignalInitDone = false
 
-  val clickListener =
+  private val clickListener =
       object : INotificationClickListener {
         override fun onClick(event: INotificationClickEvent) {
           val data = JSObject().apply { put("event", event.toJSObject()) }
@@ -27,12 +31,11 @@ class OneSignalPlugin : Plugin(), IPermissionObserver {
       }
 
   @PluginMethod
-  fun initialize(call: PluginCall) {
+  fun initOneSignal(call: PluginCall) {
     val appId = call.getString("appId") ?: return call.reject("Must provide an appId")
 
     OneSignalWrapper.sdkType = "capacitor"
 
-    // if let libVersion = call.getString("libVersion") {
     if (call.hasOption("libVersion")) {
       val libVersion = call.getString("libVersion")
       OneSignalWrapper.sdkVersion = libVersion
@@ -57,10 +60,17 @@ class OneSignalPlugin : Plugin(), IPermissionObserver {
 
   private fun setListeners() {
     OneSignal.Notifications.addPermissionObserver(this)
+    OneSignal.Notifications.addClickListener(clickListener)
   }
 
   private fun removeListeners() {
     OneSignal.Notifications.removePermissionObserver(this)
+    OneSignal.Notifications.removeClickListener(clickListener)
+  }
+
+  override fun handleOnDestroy() {
+    removeListeners()
+    super.handleOnDestroy()
   }
 
   @PluginMethod
@@ -110,12 +120,25 @@ class OneSignalPlugin : Plugin(), IPermissionObserver {
   }
 
   @PluginMethod
-  suspend fun requestNotificationsPermission(call: PluginCall) {
+  fun requestNotificationsPermission(call: PluginCall) {
     val fallbackToSettings = call.getBoolean("fallbackToSettings") ?: true
 
-    val accepted = OneSignal.Notifications.requestPermission(fallbackToSettings)
-    val data = JSObject().apply { put("accepted", accepted) }
-    call.resolve(data)
+    CoroutineScope(Dispatchers.IO).launch {
+      try {
+        // Call the suspend function and wait for the result
+        val accepted =
+            OneSignal.Notifications.requestPermission(
+                fallbackToSettings = fallbackToSettings)
+
+        // Switch back to the main thread to send the result back to JavaScript
+        withContext(Dispatchers.Main) {
+          call.resolve(JSObject().apply { put("accepted", accepted) })
+        }
+      } catch (e: Exception) {
+        // Handle any exceptions and send an error back to JavaScript
+        withContext(Dispatchers.Main) { call.reject("Failed to request permission", e) }
+      }
+    }
   }
 
   @PluginMethod
@@ -214,5 +237,5 @@ private fun INotification.toJSObject(): JSObject {
         put("actionButtons", actionButtons)
         put("rawPayload", rawPayload)
       }
-    return data
+  return data
 }
